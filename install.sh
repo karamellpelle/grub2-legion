@@ -1,7 +1,23 @@
 #! /usr/bin/env bash
 
+# resolutions:
+# 1080p (1920x1080)"
+# 1080p ultrawide (2560x1080)" 
+# 2k (2560x1440)" 
+# 4k (3840x2160)"
+# 1440p ultrawide (3440x1440)" 
+
 # Exit Immediately if a command fails
 set -o errexit
+
+#set -eE -o functrace
+#
+#failure() {
+#  local lineno=$1
+#  local msg=$2
+#  echo "Failed at $lineno: $msg"
+#}
+#trap 'failure ${LINENO} "$BASH_COMMAND"' ERR
 
 readonly ROOT_UID=0
 readonly Project_Name="GRUB2::THEMES"
@@ -11,9 +27,9 @@ tui_root_login=
 THEME_DIR="/usr/share/grub/themes"
 REO_DIR="$(cd $(dirname $0) && pwd)"
 
-THEME_VARIANTS=('tela' 'vimix' 'stylish' 'whitesur')
-ICON_VARIANTS=('color' 'white' 'whitesur')
-SCREEN_VARIANTS=('1080p' '2k' '4k' 'ultrawide' 'ultrawide2k')
+THEME_VARIANTS=('black')
+ICON_VARIANTS=('white' 'color')
+SCREEN_VARIANTS=('1920x1200' '2560x1600')
 
 #################################
 #   :::::: C O L O R S ::::::   #
@@ -62,10 +78,10 @@ cat << EOF
 Usage: $0 [OPTION]...
 
 OPTIONS:
-  -t, --theme     theme variant(s)          [tela|vimix|stylish|whitesur]       (default is tela)
-  -i, --icon      icon variant(s)           [color|white|whitesur]              (default is color)
-  -s, --screen    screen display variant(s) [1080p|2k|4k|ultrawide|ultrawide2k] (default is 1080p)
-  -r, --remove    Remove theme              [tela|vimix|stylish|whitesur]       (must add theme name option, default is tela)
+  -t, --theme     theme variant(s)          [black]               (default is black)
+  -i, --icon      icon variant(s)           [white|color]         (default is white)
+  -s, --screen    screen display variant(s) [1920x1200|2560x1600] (default is 1920x1200)
+  -r, --remove    Remove theme              [black]               (must add theme name option, default is black)
 
   -b, --boot      install theme into '/boot/grub' or '/boot/grub2'
   -g, --generate  do not install but generate theme into chosen directory       (must add your directory)
@@ -106,19 +122,9 @@ generate() {
     convert -auto-orient "${THEME_DIR}/${theme}/background.jpg" "${THEME_DIR}/${theme}/background.jpg"
   fi
 
-  if [[ ${screen} == 'ultrawide' ]]; then
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-${icon}/icons-1080p" "${THEME_DIR}/${theme}/icons"
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-select/select-1080p/"*.png "${THEME_DIR}/${theme}"
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/info-1080p.png" "${THEME_DIR}/${theme}/info.png"
-  elif [[ ${screen} == 'ultrawide2k' ]]; then
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-${icon}/icons-2k" "${THEME_DIR}/${theme}/icons"
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-select/select-2k/"*.png "${THEME_DIR}/${theme}"
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/info-2k.png" "${THEME_DIR}/${theme}/info.png"
-  else
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-${icon}/icons-${screen}" "${THEME_DIR}/${theme}/icons"
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-select/select-${screen}/"*.png "${THEME_DIR}/${theme}"
-    cp -a --no-preserve=ownership "${REO_DIR}/assets/info-${screen}.png" "${THEME_DIR}/${theme}/info.png"
-  fi
+  cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-${icon}/icons-${screen}" "${THEME_DIR}/${theme}/icons"
+  cp -a --no-preserve=ownership "${REO_DIR}/assets/assets-select/select-${screen}/"*.png "${THEME_DIR}/${theme}"
+  cp -a --no-preserve=ownership "${REO_DIR}/assets/info-${screen}.png" "${THEME_DIR}/${theme}/info.png"
 }
 
 install() {
@@ -289,44 +295,35 @@ run_dialog() {
 
     tui=$(dialog --backtitle ${Project_Name} \
     --radiolist "Choose your Grub theme background picture : " 15 40 5 \
-      1 "Vimix Theme" off  \
-      2 "Tela Theme" on \
-      3 "Stylish Theme" off  \
-      4 "WhiteSur Theme" off --output-fd 1 )
+      1 "WhiteSur Theme" off --output-fd 1 )
       case "$tui" in
-        1) theme="vimix"      ;;
-        2) theme="tela"       ;;
-        3) theme="stylish"    ;;
-        4) theme="whitesur"   ;;
+        1) theme="black"      ;;
         *) operation_canceled ;;
      esac
 
     tui=$(dialog --backtitle ${Project_Name} \
     --radiolist "Choose icon style : " 15 40 5 \
       1 "white" off \
-      2 "color" on \
-      3 "whitesur" off --output-fd 1 )
+      2 "color" off --output-fd 1 )
       case "$tui" in
         1) icon="white"       ;;
         2) icon="color"       ;;
-        3) icon="whitesur"    ;;
         *) operation_canceled ;;
      esac
 
     tui=$(dialog --backtitle ${Project_Name} \
     --radiolist "Choose your Display Resolution : " 15 40 5 \
-      1 "1080p (1920x1080)" on  \
-      2 "1080p ultrawide (2560x1080)" off  \
-      3 "2k (2560x1440)" off \
-      4 "4k (3840x2160)" off \
-      5 "1440p ultrawide (3440x1440)" off --output-fd 1 )
+      1 "1920x1200)" on  \
+      2 "2560x1600" on  \
+      3 "1080p (1920x1080)" on  \
+      4 "1080p ultrawide (2560x1080)" off  \
+      5 "2k (2560x1440)" off \
+      6 "4k (3840x2160)" off \
+      7 "1440p ultrawide (3440x1440)" off --output-fd 1 )
       case "$tui" in
-        1) screen="1080p"       ;;
-        2) screen="ultrawide"   ;;
-        3) screen="2k"          ;;
-        4) screen="4k"          ;;
-        5) screen="ultrawide2k" ;;
-        *) operation_canceled   ;;
+        1) screen="1920x1200"   ;;
+        2) screen="2560x1600"   ;;
+        *) operation_canceled_screen   ;;
      esac
   fi
 }
@@ -334,6 +331,12 @@ run_dialog() {
 operation_canceled() {
   echo -e '\0033\0143'
   prompt -i "\n Operation canceled by user, Bye!"
+  exit 1
+}
+
+operation_canceled_screen() {
+  echo -e '\0033\0143'
+  prompt -i "\n Sorry, screen display setting not implemented, Bye!"
   exit 1
 }
 
@@ -505,24 +508,9 @@ while [[ $# -gt 0 ]]; do
       shift
       for theme in "${@}"; do
         case "${theme}" in
-          tela)
+          black)
             themes+=("${THEME_VARIANTS[0]}")
             shift
-            ;;
-          vimix)
-            themes+=("${THEME_VARIANTS[1]}")
-            shift
-            ;;
-          stylish)
-            themes+=("${THEME_VARIANTS[2]}")
-            shift
-            ;;
-          whitesur)
-            themes+=("${THEME_VARIANTS[3]}")
-            shift
-            ;;
-          -*)
-            break
             ;;
           *)
             prompt -e "ERROR: Unrecognized theme variant '$1'."
@@ -546,20 +534,8 @@ while [[ $# -gt 0 ]]; do
       shift
       for theme in "${@}"; do
         case "${theme}" in
-          tela)
+          black)
             themes+=("${THEME_VARIANTS[0]}")
-            shift
-            ;;
-          vimix)
-            themes+=("${THEME_VARIANTS[1]}")
-            shift
-            ;;
-          stylish)
-            themes+=("${THEME_VARIANTS[2]}")
-            shift
-            ;;
-          whitesur)
-            themes+=("${THEME_VARIANTS[3]}")
             shift
             ;;
           -*)
@@ -577,16 +553,12 @@ while [[ $# -gt 0 ]]; do
       shift
       for icon in "${@}"; do
         case "${icon}" in
-          color)
+          white)
             icons+=("${ICON_VARIANTS[0]}")
             shift
             ;;
-          white)
+          color)
             icons+=("${ICON_VARIANTS[1]}")
-            shift
-            ;;
-          whitesur)
-            icons+=("${ICON_VARIANTS[2]}")
             shift
             ;;
           -*)
@@ -604,24 +576,12 @@ while [[ $# -gt 0 ]]; do
       shift
       for screen in "${@}"; do
         case "${screen}" in
-          1080p)
+          1920x1200)
             screens+=("${SCREEN_VARIANTS[0]}")
             shift
             ;;
-          2k)
+          2560x1600)
             screens+=("${SCREEN_VARIANTS[1]}")
-            shift
-            ;;
-          4k)
-            screens+=("${SCREEN_VARIANTS[2]}")
-            shift
-            ;;
-          ultrawide)
-            screens+=("${SCREEN_VARIANTS[3]}")
-            shift
-            ;;
-          ultrawide2k)
-            screens+=("${SCREEN_VARIANTS[4]}")
             shift
             ;;
           -*)

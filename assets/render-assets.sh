@@ -1,7 +1,9 @@
 #!/bin/bash
 
-INKSCAPE="/usr/bin/inkscape"
-OPTIPNG="/usr/bin/optipng"
+INKSCAPE="inkscape"
+OPTIPNG="optipng"
+#INKSCAPE="/usr/bin/inkscape"
+#OPTIPNG="/usr/bin/optipng"
 
 if [[ "$1" == "select" ]]; then
   EXPORT_TYPE="select"
