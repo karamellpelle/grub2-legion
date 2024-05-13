@@ -1,0 +1,8 @@
+*~
+*.swp
+.*.swo
+.DS_Store
+gmon.out
+leaks-*.txt
+session.vim
+tmp
