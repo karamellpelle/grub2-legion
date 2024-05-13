@@ -5,10 +5,10 @@
 Usage:  `sudo ./install.sh [OPTIONS...]`
 
 ```
-  -t, --theme     theme variant(s)          [tela|vimix|stylish|whitesur]       (default is tela)
-  -i, --icon      icon variant(s)           [color|white|whitesur]              (default is color)
-  -s, --screen    screen display variant(s) [1080p|2k|4k|ultrawide|ultrawide2k] (default is 1080p)
-  -r, --remove    Remove theme              [tela|vimix|stylish|whitesur]       (must add theme name option, default is tela)
+  -t, --theme     theme variant(s)          [black]                             (default is black)
+  -i, --icon      icon variant(s)           [white]                             (default is color)
+  -s, --screen    screen display variant(s) [1920x1200|2560x1600]               (default is 1920x1200)
+  -r, --remove    Remove theme              [black]                             (must add theme name option, default is black)
 
   -b, --boot      install theme into '/boot/grub' or '/boot/grub2'
   -g, --generate  do not install but generate theme into chosen directory       (must add your directory)
@@ -19,22 +19,22 @@ Usage:  `sudo ./install.sh [OPTIONS...]`
 _If no options are used, a user interface `dialog` will show up instead_
 
 ### Examples:
- - Install Tela theme on 2k display device:
+ - Install Tela theme on 2560x1600 display device:
 
 ```sh
-sudo ./install.sh -t tela -s 2k
+sudo ./install.sh -t black -s 2560x1600
 ```
 
  - Install Tela theme into /boot/grub/themes:
 
 ```sh
-sudo ./install.sh -b -t tela
+sudo ./install.sh -b -t black
 ```
 
  - Uninstall Tela theme:
 
 ```sh
-sudo ./install.sh -r -t tela
+sudo ./install.sh -r -t black
 ```
 
 ## Issues / tweaks:
@@ -50,11 +50,8 @@ sudo ./install.sh -r -t tela
 
  - Make sure you have `imagemagick` installed, or at least something that provides `convert`
  - Find the resolution of your display, and make sure your background matches the resolution
-   - 1920x1080 >> 1080p
-   - 2560x1080 >> ultrawide
-   - 2560x1440 >> 2k
-   - 3440x1440 >> ultrawide2k
-   - 3840x2160 >> 4k
+   - 1920x1200 >> 1920x1200
+   - 2560x1600 >> 2560x1600
  - Place your custom background inside the root of the project, and name it `background.jpg`
  - Run the installer like normal, but with -s `[YOUR_RESOLUTION]` and -t `[THEME]` and -i `[ICON]`
    - Make sure to replace `[YOUR_RESOLUTION]` with your resolution and `[THEME]` with the theme
@@ -64,7 +61,7 @@ sudo ./install.sh -r -t tela
    - Delete the existing icon, if there is one
    - Run `cd assets; ./render-all.sh`
  - Create a pull request from your branch or fork
- - If any issues occur, report then to the [issue](https://github.com/vinceliuice/grub2-themes/issues) page
+ - If any issues occur, report then to the [issue](https://github.com/karamellpelle/grub2-legion/issues) page
 
 ## Preview:
 ![preview](preview.png?raw=true)
